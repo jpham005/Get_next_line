@@ -6,7 +6,7 @@
 /*   By: jaham <jaham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 12:52:14 by jaham             #+#    #+#             */
-/*   Updated: 2022/03/18 15:21:24 by jaham            ###   ########.fr       */
+/*   Updated: 2022/03/19 12:33:09 by jaham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ typedef struct s_buffer
 	char			*curr;
 	char			*end;
 	struct s_buffer	*next;
-	struct s_buffer	*prev;
 }	t_buffer;
 
 typedef struct s_string

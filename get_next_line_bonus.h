@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jaham <jaham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 12:52:14 by jaham             #+#    #+#             */
-/*   Updated: 2022/03/18 15:21:24 by jaham            ###   ########.fr       */
+/*   Updated: 2022/03/19 12:41:38 by jaham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # include <unistd.h>
 
@@ -39,7 +39,6 @@ typedef struct s_buffer
 	char			*curr;
 	char			*end;
 	struct s_buffer	*next;
-	struct s_buffer	*prev;
 }	t_buffer;
 
 typedef struct s_string

@@ -6,26 +6,31 @@
 /*   By: jaham <jaham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 12:59:58 by jaham             #+#    #+#             */
-/*   Updated: 2022/03/18 15:57:32 by jaham            ###   ########.fr       */
+/*   Updated: 2022/03/19 12:41:12 by jaham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdlib.h>
 
-static char	*lst_del(t_buffer *buffer)
+static char	*lst_del(t_buffer **head, int fd)
 {
-	if (buffer->prev)
-		buffer->prev->next = buffer->next;
-	if (buffer->next)
-		buffer->next->prev = buffer->prev;
-	free(buffer);
+	t_buffer	*temp;
+
+	while (*head && (*head)->fd != fd)
+		head = &((*head)->next);
+	if (*head)
+	{
+		temp = (*head)->next;
+		free(*head);
+		*head = temp;
+	}
 	return (NULL);
 }
 
-static char	*del_all(t_buffer *buffer, t_string *string)
+static char	*del_all(t_buffer **buffer, t_string *string, int fd)
 {
-	lst_del(buffer);
+	lst_del(buffer, fd);
 	free(string->str);
 	string->str = NULL;
 	return (NULL);
@@ -57,19 +62,23 @@ static char	get_char(t_buffer *buf, t_eof *eof)
 	return (*(buf->curr++));
 }
 
-static t_stat	get_line(t_buffer **curr_buf, t_string *string)
+static t_stat	get_line(t_buffer **head, t_string *string, int fd)
 {
-	char	c;
-	t_eof	eof;
+	char		c;
+	t_eof		eof;
+	t_buffer	*curr_buf;
 
+	curr_buf = find_buffer_list(head, fd);
+	if (!curr_buf)
+		return (ERROR);
 	while (1)
 	{
-		c = get_char(*curr_buf, &eof);
+		c = get_char(curr_buf, &eof);
 		if (eof == READ_ERROR)
 			return (ERROR);
 		if (eof == IS_END)
 		{
-			lst_del(curr_buf);
+			lst_del(head, fd);
 			break ;
 		}
 		if (append_string(string, c) == ERROR)
@@ -82,20 +91,16 @@ static t_stat	get_line(t_buffer **curr_buf, t_string *string)
 
 char	*get_next_line(int fd)
 {
-	static	t_buffer	*buffer;
-	t_buffer			*curr_buf;
-	t_string			string;
-	char				*ret;
+	static t_buffer	*buffer;
+	t_string		string;
+	char			*ret;
 
-	curr_buf = find_buffer_list(&buffer, fd);
-	if (!curr_buf)
-		return (NULL);
 	if (fd < 0 || BUFFER_SIZE <= 0 || (read(fd, NULL, 0) < 0))
-		return (lst_del(&curr_buf));
+		return (lst_del(&buffer, fd));
 	if (init_string(&string) == ERROR)
-		return (lst_del(&curr_buf));
-	if (get_line(&curr_buf, &string) == ERROR)
-		return (del_all(&curr_buf, &string));
+		return (lst_del(&buffer, fd));
+	if (get_line(&buffer, &string, fd) == ERROR)
+		return (del_all(&buffer, &string, fd));
 	ret = copy_string(&string);
 	free(string.str);
 	string.str = NULL;

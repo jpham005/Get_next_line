@@ -6,7 +6,7 @@
 /*   By: jaham <jaham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 13:07:40 by jaham             #+#    #+#             */
-/*   Updated: 2022/03/18 15:23:39 by jaham            ###   ########.fr       */
+/*   Updated: 2022/03/19 12:34:23 by jaham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,21 +69,18 @@ char	*copy_string(t_string *string)
 t_buffer	*find_buffer_list(t_buffer **head, int fd)
 {
 	t_buffer	*new;
-	t_buffer	*cp;
 
-	cp = *head;
-	while (cp && cp->fd != fd)
-		cp = cp->next;
-	if (cp)
-		return (cp);
+	while (*head && (*head)->fd != fd)
+		head = &((*head)->next);
+	if (*head)
+		return (*head);
 	new = malloc(sizeof(t_buffer));
 	if (!new)
 		return (NULL);
 	new->curr = NULL;
 	new->end = NULL;
 	new->fd = fd;
-	new->next = *head;
-	new->prev = NULL;
+	new->next = NULL;
 	*head = new;
 	return (new);
 }
