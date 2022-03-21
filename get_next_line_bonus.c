@@ -6,13 +6,13 @@
 /*   By: jaham <jaham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/18 12:59:58 by jaham             #+#    #+#             */
-/*   Updated: 2022/03/19 12:41:20 by jaham            ###   ########.fr       */
+/*   Updated: 2022/03/21 15:43:27 by jaham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 #include <stdlib.h>
-
+#include <stdio.h>
 static char	*lst_del(t_buffer **head, int fd)
 {
 	t_buffer	*temp;
@@ -40,11 +40,6 @@ static char	get_char(t_buffer *buf, t_eof *eof)
 {
 	if (buf->curr == buf->end)
 	{
-		if (buf->end < buf->buf + BUFFER_SIZE && buf->end > buf->buf)
-		{
-			*eof = IS_END;
-			return (0);
-		}
 		buf->end = buf->buf + read(buf->fd, buf->buf, BUFFER_SIZE);
 		buf->curr = buf->buf;
 	}
